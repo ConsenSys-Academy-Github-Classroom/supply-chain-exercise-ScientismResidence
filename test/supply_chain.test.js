@@ -154,10 +154,24 @@ contract("SupplyChain", function (accounts) {
 
   describe("Use cases", () => {
     it("should add an item with the provided name and price", async () => {
+      // I've added a couple of assertions to be sure that counter is properly work.
+      // I played with incrementation in contract a little bit.
+      const initialCount = await instance.skuCount.call();
       await instance.addItem(name, price, { from: alice });
+      const thenCount = await instance.skuCount.call();
 
       const result = await instance.fetchItem.call(0);
 
+      assert.equal(
+        initialCount,
+        0,
+        "initial counter value is wrong"
+      );
+      assert.equal(
+        thenCount,
+        1,
+        "counter is wrong after item adding"
+      );
       assert.equal(
         result[0],
         name,
